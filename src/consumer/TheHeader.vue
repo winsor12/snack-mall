@@ -13,17 +13,59 @@
       <div class="header__iconbox header__user-shopcar">
         <img src="../assets/shopcar.svg" class="header__icon" />
       </div>
-      <div class="header__user-box">
-        <div class="header__user-image">
-          <img src="../assets/bighead.svg" alt="people" class="header__image" />
+      <el-dropdown>
+        <div class="header__user-box">
+          <div class="header__user-image">
+            <img
+              src="../assets/bighead.svg"
+              alt="people"
+              class="header__image"
+            />
+          </div>
+          <div class="header__user-username">
+            <h3>{{ user.username }}</h3>
+          </div>
         </div>
-        <div class="header__user-username">
-          <h3>老马</h3>
-        </div>
-      </div>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item
+              ><span @click="layout">退出登录</span></el-dropdown-item
+            >
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      user: JSON.parse(sessionStorage.getItem('user'))
+    };
+  },
+  methods: {
+    layout() {
+      this.openFullScreen2();
+      setTimeout(() => {
+        sessionStorage.clear();
+        this.$router.push("/");
+      }, 2000);
+    },
+    openFullScreen2() {
+      const loading = this.$loading({
+        lock: true,
+        text: "Loading",
+        background: "rgba(0, 0, 0, 0.7)",
+      });
+      setTimeout(() => {
+        loading.close();
+      }, 2000);
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 .header {

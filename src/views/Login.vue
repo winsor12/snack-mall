@@ -1,8 +1,8 @@
 <template>
-     <div class="bigBox">
+  <div class="bigBox">
     <div class="loginBox screen">
       <h2 class="loginBox__heading">登录</h2>
-      <span class="hint">{{message}}</span>
+      <span class="hint">{{ message }}</span>
       <div class="loginBox__main">
         <el-form :model="UserLogin">
           <el-form-item label="用户名">
@@ -179,17 +179,16 @@ export default {
       UserLogin: {
         username: "",
         password: "",
-        role: "merchant"
+        role: "merchant",
       },
     };
   },
   methods: {
-    demo(){
-      if(this.role === 'merchant'){
-        window.localStorage.setItem('roles','merchant')
-      }
-      else if(this.role === 'user'){
-        window.localStorage.setItem('roles','user')
+    demo() {
+      if (this.role === "merchant") {
+        window.localStorage.setItem("roles", "merchant");
+      } else if (this.role === "user") {
+        window.localStorage.setItem("roles", "user");
       }
     },
     openFullScreen2() {
@@ -208,7 +207,8 @@ export default {
     onSubmit() {
       const that = this;
 
-      console.log(this.UserLogin.username), console.log(this.UserLogin.password);
+      console.log(this.UserLogin.username),
+        console.log(this.UserLogin.password);
       if (this.UserLogin.username != null && this.UserLogin.password != null) {
         axios({
           method: "post",
@@ -221,22 +221,26 @@ export default {
           console.log(res);
           that.openFullScreen2();
           setTimeout(() => {
-            console.log(res.data)
+            console.log(res.data);
             if (res.data == "admin" || res.data == "merchant") {
               that.UserLogin.role = res.data;
-              let user = JSON.stringify(that.UserLogin)
+              let user = JSON.stringify(that.UserLogin);
               sessionStorage.setItem("user", [user]);
-              console.log(JSON.parse(sessionStorage.getItem('user')).role);
+              console.log(JSON.parse(sessionStorage.getItem("user")).role);
               that.$router.push("/Goods");
-            }else if(res.data == "consumer") {
-              that.$router.push("/consumer")
-            }else {
+            } else if (res.data == "consumer") {
+              that.UserLogin.role = res.data;
+              let user = JSON.stringify(that.UserLogin);
+              sessionStorage.setItem("user", [user]);
+              console.log(JSON.parse(sessionStorage.getItem("user")).role);
+              that.$router.push("/consumer");
+            } else {
               that.message = "用户名或密码错误";
               document.getElementsByClassName("hint")[0].style.opacity = 1;
             }
           }, 2000);
         });
-      }else {
+      } else {
         that.message = "用户名和密码不能为空";
         document.getElementsByClassName("hint")[0].style.opacity = 1;
       }
