@@ -222,14 +222,14 @@ export default {
           that.openFullScreen2();
           setTimeout(() => {
             console.log(res.data);
-            if (res.data == "admin" || res.data == "merchant") {
-              that.UserLogin.role = res.data;
+            if (res.data.role == "admin" || res.data.role == "merchant") {
+              that.UserLogin = res.data;
               let user = JSON.stringify(that.UserLogin);
               sessionStorage.setItem("user", [user]);
               console.log(JSON.parse(sessionStorage.getItem("user")).role);
               that.$router.push("/Goods");
-            } else if (res.data == "consumer") {
-              that.UserLogin.role = res.data;
+            } else if (res.data.role == "consumer") {
+              that.UserLogin = res.data;
               let user = JSON.stringify(that.UserLogin);
               sessionStorage.setItem("user", [user]);
               console.log(JSON.parse(sessionStorage.getItem("user")).role);

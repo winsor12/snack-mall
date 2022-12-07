@@ -26,12 +26,17 @@
       <el-input v-model="ruleForm.lid"></el-input>
     </el-form-item> -->
     <div style="margin-left: 100px; margin-top: 40px; width: 600px">
-      <el-select v-model="value" placeholder="请选择商品类别">
+      <el-select v-model="typeValue" placeholder="请选择商品类别">
         <el-option
           v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
+          :key="item.lid"
+          :label="item.category"
+          :value="item.category"
+          @click="
+            () => {
+              this.ruleForm.lid = item.lid;
+            }
+          "
         >
         </el-option>
       </el-select>
@@ -60,7 +65,7 @@
       <el-button type="primary" @click="submitForm(ruleForm)"
         >立即创建</el-button
       >
-      <el-button @click="resetForm('ruleForm')">重置</el-button>
+      <el-button @click="resetForm(ruleForm)">重置</el-button>
       <!-- <el-button @click="test()">test</el-button> -->
     </el-form-item>
   </el-form>
@@ -70,29 +75,8 @@
 export default {
   data() {
     return {
-      options: [
-        {
-          value: "选项1",
-          label: "类别1",
-        },
-        {
-          value: "选项2",
-          label: "类别2",
-        },
-        {
-          value: "选项3",
-          label: "类别3",
-        },
-        {
-          value: "选项4",
-          label: "类别4",
-        },
-        {
-          value: "选项5",
-          label: "类别5",
-        },
-      ],
-      value: "",
+      options: [],
+      typeValue: "",
 
       ruleForm: {
         cname: "",
@@ -100,13 +84,10 @@ export default {
         price: "",
         inventory: "",
         lid: "",
+        sid: JSON.parse(sessionStorage.getItem("user")).id,
+        imgUrl: [],
       },
-      fileList: [
-        {
-          name: "food.jpeg",
-          url: "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-        },
-      ],
+
       rules: {
         cname: [
           { required: true, message: "商品名称不能为空", trigger: "blur" },
@@ -125,9 +106,9 @@ export default {
 
   methods: {
     setfileList(res) {
-      console.log(res)
-      this.fileList.push(res[0])
-      console.log(this.fileList)
+      console.log(res);
+      this.ruleForm.imgUrl.push(res[0]);
+      console.log(this.ruleForm.imgUrl);
     },
     // handleRemove(file, fileList) {
     //   console.log(file, fileList);
@@ -137,34 +118,66 @@ export default {
     // },
 
     submitForm(formName) {
-      console.log(formName)
+      console.log(formName);
       const _this = this;
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.axios
-            .post("http://localhost:8080", this.ruleForm)
-            .then(function (resp) {
-              if (resp.data == "success") {
-                _this.$alert(
-                  "《" + _this.ruleForm.name + "》 上架成功！",
-                  "消息",
-                  {
-                    confirmButtonText: "确定",
-                    callback: (action) => {
-                      _this.$router.push("/Goods");
-                    },
-                  }
-                );
-              }
+      this.axios({
+        method: "post",
+        url: "http://localhost:8080/goods/addGoods",
+        data: _this.ruleForm,
+      })
+        .then((res) => {
+          if (res) {
+            alert("《" + _this.ruleForm.cname + "》 上架成功！", "消息", {
+              confirmButtonText: "确定",
+              callback: (action) => {
+                _this.$router.push("/Goods");
+              },
             });
-        } else {
-          return false;
-        }
-      });
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      // this.$refs[formName].validate((valid) => {
+      //   if (valid) {
+      //     this.axios
+      //       .post("http://localhost:8080", this.ruleForm)
+      //       .then(function (resp) {
+      //         if (resp.data == "success") {
+      //           _this.$alert(
+      //             "《" + _this.ruleForm.name + "》 上架成功！",
+      //             "消息",
+      //             {
+      //               confirmButtonText: "确定",
+      //               callback: (action) => {
+      //                 _this.$router.push("/Goods");
+      //               },
+      //             }
+      //           );
+      //         }
+      //       });
+      //   } else {
+      //     return false;
+      //   }
+      // });
     },
     resetForm(formName) {
-      this.$refs[formName].resetFields();
+      // this.$refs[formName].resetFields();
     },
+  },
+  created() {
+    const _this = this;
+    this.axios
+      .get("http://localhost:8080/types/findAll")
+      .then(function (resp) {
+        console.log(resp.data);
+        _this.options = resp.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    if (JSON.parse(sessionStorage.getItem("user")).role == "merchant") {
+    }
   },
 };
 </script>
