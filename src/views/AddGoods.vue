@@ -72,6 +72,7 @@
 </template>
 
 <script>
+import { List } from "@element-plus/icons";
 export default {
   data() {
     return {
@@ -118,6 +119,17 @@ export default {
     // },
 
     submitForm(formName) {
+      // var set = new Set(this.ruleForm.imgUrl);
+      // console.log(set);
+      // this.ruleForm.imgUrl = set;
+      var ids = [];
+      for (var i = 0; i < this.ruleForm.imgUrl.length; i++) {
+        ids.push(this.ruleForm.imgUrl[i]);
+      }
+      ids = ids.join(",");
+
+      console.log(ids);
+      this.ruleForm.imgUrl = ids;
       console.log(formName);
       const _this = this;
       this.axios({
