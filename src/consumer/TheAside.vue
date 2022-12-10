@@ -1,24 +1,31 @@
 <template>
   <div class="aside">
     <el-menu
-      background-color="#2c3e50"
+      background-color="#ff9999"
       text-color="#FAFAFA"
       active-text-color="var(--color-primary-light)"
-      router="true"
-    >
-      <el-menu-item index="1">首页</el-menu-item>
-      <el-menu-item-group title="分类">
-        <el-menu-item index="2">干果</el-menu-item>
-        <el-menu-item index="3">膨化食品</el-menu-item>
+      router :default-active="this.$router.path">
+
+      <el-menu-item index="/consumer">首页</el-menu-item>
+      <el-menu-item-group title="商品分类">
+        <el-menu-item index="/type/2">干果</el-menu-item>
+        <el-menu-item index="/type/3">膨化食品</el-menu-item>
+        <el-menu-item index="/type/4">熟食</el-menu-item>
+        <el-menu-item index="/type/5">油炸物</el-menu-item>
+        <el-menu-item index="/type/6">奶制品</el-menu-item>
       </el-menu-item-group>
-      <el-menu-item></el-menu-item>
-      <el-menu-item></el-menu-item>
     </el-menu>
   </div>
 </template>
-
+<script>
+export default {
+  
+}
+</script>
 <style>
 .aside {
-  height: 100%;
+  height: 900px;
+  width: 201px;
+  background-color: #ff9999;
 }
 </style>

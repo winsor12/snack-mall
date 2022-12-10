@@ -28,9 +28,14 @@
 }
 html {
   font-size: 62.5%;
+  overflow: auto;
 }
 
 body {
+<<<<<<< HEAD
   /* overflow: hidden; */
+=======
+  overflow: scroll;
+>>>>>>> 1b08afd61e96769e5bdade20751d3a9284b9fe87
 }
 </style>
