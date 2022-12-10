@@ -28,9 +28,10 @@
 }
 html {
   font-size: 62.5%;
+  overflow: auto;
 }
 
 body {
-  overflow: hidden;
+  overflow: scroll;
 }
 </style>

@@ -1,14 +1,22 @@
 <template>
   <div class="main">
     <div class="main__newnacks">
-      <div class="main__newnacks-title">新品即将发布</div>
+      <div class="main__newnacks-title">New Product launch !</div>
       <div class="main__newnacks-content">
-        
+        <div v-for="(item,index) in tableData" :key="index" class="snacklist">   
+          <div @click="details(index)">    
+          <div class="image">{{item.image}}</div>
+          <div class="cname">{{item.cname}}</div>
+          <div class="introduction">{{item.introduction}}</div>
+          <div class="price">¥{{item.price}}</div>
+          </div>
+           <div class="shopcar" @click="addshopcar">+</div>
+        </div>
       </div>
     </div>
     <div class="main__news">
       <div class="main__newsbox">
-        <div class="main__news-title">title</div>
+        <div class="main__news-title">热销排行</div>
         <div class="main__news-content">
           <p>
             Possimus debitis enim autem sapiente tempore. Minima possimus
@@ -16,26 +24,93 @@
             id quidem maxime. Porro, hic repellat.
           </p>
         </div>
-        <div class="main__news-image"></div>
-      </div>
-      <div class="main__newsbox">
-        <div class="main__news-title">title</div>
-        <div class="main__news-content">
-          <p>
-            Possimus debitis enim autem sapiente tempore. Minima possimus
-            repellat alias? Architecto illum aperiam quisquam, optio blanditiis
-            id quidem maxime. Porro, hic repellat.
-          </p>
-        </div>
-        <div class="main__news-image"></div>
       </div>
     </div>
   </div>
 </template>
 
+<script>
+export default {
+   data() {
+      return {
+        total: null,
+        tableData: [
+          {
+            cid: '1',
+            cname: '浣熊干脆面',
+            image: '123345',
+            introduction: '好吃到爆炸',
+            price: '12',
+          },
+          {
+            cid: '2',
+            cname: '浣熊干脆面2',
+            image: '123345',
+            introduction: '好吃到爆炸好吃到爆炸',
+            price: '12',
+          },
+          {
+            cid: '3',
+            cname: '浣熊干脆面2',
+            image: '123345',
+            introduction: '好吃到爆炸',
+            price: '12',
+          },
+          {
+            cid: '4',
+            cname: '浣熊干脆面2',
+            image: '123345',
+            introduction: '好吃到爆炸',
+            price: '12',
+          },
+          {
+            cid: '5',
+            cname: '浣熊干脆面2',
+            image: '123345',
+            introduction: '好吃到爆炸',
+            price: '12',
+          },
+          {
+            cid: '6',
+            cname: '浣熊干脆面2',
+            image: '123345',
+            introduction: '好吃到爆炸',
+            price: '12',
+          },
+          {
+              cid: '7',
+            cname: '浣熊干脆面2',
+            image: '123345',
+            introduction: '好吃到爆炸',
+            price: '12',
+          },
+          {
+              cid: '8',
+            cname: '浣熊干脆面2',
+            image: '123345',
+            introduction: '好吃到爆炸',
+            price: '12',
+          },
+        ],
+      }
+    },
+    methods: {
+       addshopcar(){
+        alert("加入购物车成功")
+       },
+       details(index){
+        // alert(this.tableData[index].cid)
+        this.$router.push("/details/" + this.tableData[index].cid)
+       },
+    }
+}
+</script>
+
 <style lang="scss">
 .main {
   width: 100%;
+  height: 100%;
+  // border: 1px solid black; 
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -43,30 +118,90 @@
   &__newnacks {
     background: #fff;
     background-size: cover;
-    margin-right: 10%;
-    flex: 0 0 65%;
+    margin-right: 20px;
+    // flex: 0 0 70%;
+    width: 850px;
     border-radius: 3px;
     padding: 20px 35px;
     color: aliceblue;
+    // border: 1px solid black; 
 
     &-title {
-      font-size: 5rem;
+      font-size: 25px;
       font-weight: 800;
+      // border: 1px solid black; 
+      color: #ff9999;
+      border-radius: 23px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     &-content {
       font-size: 2rem;
       text-align: left;
+      height: 100%;
       background-color: rgb(255, 255, 255);
       padding: 25px;
       color: #565656;
+      // border: 1px solid black; 
     }
   }
 
   &__news {
     background-color: azure;
     flex: 1;
-    border-radius: 3px;
+    border-radius: 20px;
+    // border: 1px solid black; 
   }
 }
+  .snacklist{
+   width: 150px;
+   height: 245px;
+  //  border: 1px solid black;
+   float: left;
+   margin-left: 30px;
+   margin-top: 20px;
+   border-radius: 23px;
+  //  background-color: rgb(212, 245, 143);
+  box-shadow: 0px 1px 3px #909090;
+  }
+  .image{
+    width: 150px;
+    height: 150px;
+    // border: 1px solid black; 
+    border-radius: 23px;
+  }
+  .cname{
+    width: 140px;
+    margin-left: 10px;
+    margin-top: 5px;
+    // border: 1px solid black; 
+  }
+  .introduction{
+    width: 130px;
+    margin-left: 10px;
+    // border: 1px solid black; 
+    font-size: 6px;
+  }
+  .price{
+    width: 100px;
+    margin-left: 10px;
+    // border: 1px solid black; 
+    float: left;
+  }
+  .shopcar{
+    width: 40px;
+    height: 43px;
+    // border: 1px solid black; 
+    float: left;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 23px 0px 23px 0px;
+    background-color: #03c03c;
+    margin-top: 6px;
+    color: white;
+    font-size: 30px;
+  }
+
+
+
 </style>

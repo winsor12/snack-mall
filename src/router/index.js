@@ -14,7 +14,8 @@ import Login from "../views/Login"
 import Admin from "../views/Admin"
 import Register from "../views/Register"
 import ShoppingMall from "../consumer/ShoppingMall"
-
+import Type from "../consumer/Type"
+import Details from "../consumer/Details"
 
 
 const routes = [
@@ -41,7 +42,7 @@ const routes = [
         path: "/Changemyself",
         name: "修改个人信息",
         component: Changemyself,
-        meta: {"role": ['admin','merchant']}
+        meta: {"role": ['merchant']}
       }
     ]
   },
@@ -61,7 +62,7 @@ const routes = [
         path: "/AddGoods",
         name: "上架商品",
         component: AddGoods,
-        meta: {"role": ['admin','merchant']}
+        meta: {"role": ['merchant']}
       }
     ]
   },
@@ -69,7 +70,7 @@ const routes = [
     path: "/navigation",
     name: "订单管理",
     component: Merchant,
-    meta: {"role": ['merchant']},
+    meta: {"role": ['merchant','admin']},
     children: [
       {
         path: "/Order",
@@ -126,7 +127,17 @@ const routes = [
         component: Admin
       }
     ]
-    }
+    },
+    {
+      path: "/type/:id",
+      component: Type,
+      meta: {"role": ['consumer']},
+    },
+    {
+      path: "/details/:cid",
+      component: Details,
+      meta: {"role": ['consumer']},
+    },
 ]
 
 const router = createRouter({
