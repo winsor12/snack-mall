@@ -31,9 +31,4 @@ html {
   overflow: auto;
 }
 
-body {
-
-  overflow: scroll;
-
-}
 </style>

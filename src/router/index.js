@@ -16,6 +16,7 @@ import Register from "../views/Register"
 import ShoppingMall from "../consumer/ShoppingMall"
 import Type from "../consumer/Type"
 import Details from "../consumer/Details"
+import TheTest from "../consumer/TheTest"
 
 
 const routes = [
@@ -138,6 +139,11 @@ const routes = [
       component: Details,
       meta: {"role": ['consumer']},
     },
+    {
+      path: "/thetest",
+      component: TheTest,
+      meta: {"role": ['admin','merchant']}
+    }
 ]
 
 const router = createRouter({

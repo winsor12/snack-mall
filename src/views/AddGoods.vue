@@ -51,6 +51,8 @@
         list-type="picture"
         multiple
         :on-success="setfileList"
+        :limit="1"
+        :on-exceed="handleExceed"
       >
         <el-button size="small" type="primary">点击上传</el-button>
         <template #tip>
@@ -73,6 +75,7 @@
 
 <script>
 import { List } from "@element-plus/icons";
+import { ElMessage } from 'element-plus'
 export default {
   data() {
     return {
@@ -86,7 +89,7 @@ export default {
         inventory: "",
         lid: "",
         sid: JSON.parse(sessionStorage.getItem("user")).id,
-        imgUrl: [],
+        imgUrl: "",
       },
 
       rules: {
@@ -108,7 +111,7 @@ export default {
   methods: {
     setfileList(res) {
       console.log(res);
-      this.ruleForm.imgUrl.push(res[0]);
+      this.ruleForm.imgUrl = res[0];
       console.log(this.ruleForm.imgUrl);
     },
     // handleRemove(file, fileList) {
@@ -119,17 +122,6 @@ export default {
     // },
 
     submitForm(formName) {
-      // var set = new Set(this.ruleForm.imgUrl);
-      // console.log(set);
-      // this.ruleForm.imgUrl = set;
-      var ids = [];
-      for (var i = 0; i < this.ruleForm.imgUrl.length; i++) {
-        ids.push(this.ruleForm.imgUrl[i]);
-      }
-      ids = ids.join(",");
-
-      console.log(ids);
-      this.ruleForm.imgUrl = ids;
       console.log(formName);
       const _this = this;
       this.axios({
@@ -150,31 +142,12 @@ export default {
         .catch(function (error) {
           console.log(error);
         });
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     this.axios
-      //       .post("http://localhost:8080", this.ruleForm)
-      //       .then(function (resp) {
-      //         if (resp.data == "success") {
-      //           _this.$alert(
-      //             "《" + _this.ruleForm.name + "》 上架成功！",
-      //             "消息",
-      //             {
-      //               confirmButtonText: "确定",
-      //               callback: (action) => {
-      //                 _this.$router.push("/Goods");
-      //               },
-      //             }
-      //           );
-      //         }
-      //       });
-      //   } else {
-      //     return false;
-      //   }
-      // });
     },
     resetForm(formName) {
       // this.$refs[formName].resetFields();
+    },
+    handleExceed() {
+      ElMessage('只能上传一张图片')
     },
   },
   created() {

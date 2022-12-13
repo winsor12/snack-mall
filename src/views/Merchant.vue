@@ -2,7 +2,7 @@
   <!-- 页面整体框架 -->
   <el-container style="height: 100%">
     <!-- 构建左侧菜单 -->
-    <div style="background-color: #545c64; width: 200px; height: 1000px">
+    <div style="background-color: #545c64; width: 200px; height: 100vh">
       <el-menu
         active-text-color="#ffd04b"
         background-color="#545c64"
@@ -25,14 +25,15 @@
                 <template #title
                   ><i class="el-icon-setting">{{ item.name }}</i></template
                 >
-                <el-menu-item
-                  style="background-color: #1f2d3d !important"
-                  v-for="(item2, index2) in item.children"
-                  :key="index2"
-                  :index="item2.path"
-                  :class="$route.path == item2.path ? 'is-active' : ''"
-                  >{{ item2.name }}</el-menu-item
-                >
+                <div v-for="(item2, index2) in item.children" :key="index2">
+                  <el-menu-item
+                    v-if="item2.meta.role.indexOf(role) >= 0"
+                    style="background-color: #1f2d3d !important"
+                    :index="item2.path"
+                    :class="$route.path == item2.path ? 'is-active' : ''"
+                    >{{ item2.name }}</el-menu-item
+                  >
+                </div>
               </el-sub-menu>
             </div>
           </el-menu>
@@ -48,7 +49,7 @@
         :ellipsis="false"
         @select="handleSelect"
       >
-        <el-menu-item disabled>商家后台管理</el-menu-item>
+        <el-menu-item disabled>后台管理</el-menu-item>
         <div>
           <button class="button1" @click="layout">退出登录</button>
         </div>
@@ -72,9 +73,6 @@
   /* border: 1px solid saddlebrown; */
 }
 
-body {
-  overflow: hidden;
-}
 
 i {
   font-style: normal;
@@ -88,7 +86,7 @@ i {
   font-family: inherit;
   border: none;
   overflow: hidden;
-  margin-left: 930px;
+  margin-left: 1056px;
   margin-top: 5px;
   position: absolute;
   z-index: 1;

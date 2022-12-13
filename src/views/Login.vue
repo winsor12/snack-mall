@@ -73,8 +73,8 @@ el-input {
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: 22rem;
-  height: 22rem;
+  width: 24rem;
+  height: 28rem;
   padding: 2rem;
   border-radius: 5px;
   background: rgba(0, 0, 0, 0.544);
