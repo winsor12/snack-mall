@@ -44,6 +44,7 @@
       },
       methods: {
       button() {
+        
         this.$confirm('是否修改个人信息?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

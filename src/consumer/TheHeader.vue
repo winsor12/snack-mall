@@ -8,7 +8,11 @@
     </div>
     <div class="header__user">
       <div class="header__iconbox header__user-message">
-        <img src="../assets/message.svg" class="header__icon" />
+        <img
+          src="../assets/message.svg"
+          class="header__icon"
+          @click="myorders"
+        />
       </div>
       <div class="header__iconbox header__user-shopcar" @click="shopcar">
         <img src="../assets/shopcar.svg" class="header__icon" />
@@ -153,6 +157,9 @@ export default {
       setTimeout(() => {
         loading.close();
       }, 2000);
+    },
+    myorders() {
+      this.$router.push("/myorders");
     },
   },
 };

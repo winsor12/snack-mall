@@ -17,13 +17,19 @@
             </el-main>
           </el-container> -->
           <div class="box_type">
-          <div v-for="item in tableData" :key="item" class="type">
-             <div class="image">{{item.image}}</div>
-             <div class="cname">{{item.cname}}</div>
-             <div class="introduction">{{item.introduction}}</div>
-             <div class="price">¥{{item.price}}</div>
-             <div class="shopcar" @click="addshopcar">+</div>
-          </div>
+            <div v-for="item in tableData" :key="item" class="type">
+              <div class="image">
+                <div v-if="item.imageList && item.imageList[0] && item.imageList[0].image">
+                  <el-image
+                    :src="require('@/assets/' + item.imageList[0].image)"
+                  ></el-image>
+                </div>
+              </div>
+              <div class="cname">{{ item.cname }}</div>
+              <div class="introduction">{{ item.introduction }}</div>
+              <div class="price">¥{{ item.price }}</div>
+              <div class="shopcar" @click="addshopcar">+</div>
+            </div>
           </div>
         </el-container>
       </el-container>
@@ -32,143 +38,167 @@
 </template>
 
 <script>
-import TheCarousel from './TheCarousel.vue'
-import TheHeader from './TheHeader.vue'
-import TheAside from './TheAside.vue'
-import TheMain from './TheMain.vue'
-
+import TheCarousel from "./TheCarousel.vue";
+import TheHeader from "./TheHeader.vue";
+import TheAside from "./TheAside.vue";
+import TheMain from "./TheMain.vue";
 
 export default {
-    components: {TheCarousel, TheHeader, TheAside, TheMain},
-     data() {
-      return {
-        total: null,
-        tableData: [
-          {
-            cname: '浣熊干脆面',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-            {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-            {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-          {
-            cname: '浣熊干脆面2',
-            image: '123345',
-            introduction: '好吃到爆炸',
-            price: '12',
-          },
-        ],
-      }
+  components: { TheCarousel, TheHeader, TheAside, TheMain },
+  data() {
+    return {
+      total: null,
+      tableData: [
+        {
+          cname: "浣熊干脆面",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+        {
+          cname: "浣熊干脆面2",
+          image: "123345",
+          introduction: "好吃到爆炸",
+          price: "12",
+        },
+      ],
+    };
+  },
+  methods: {
+    addshopcar() {
+      alert("加入购物车成功");
     },
-    methods: {
-       addshopcar(){
-        alert("加入购物车成功")
-       }
-    }
-}
+  },
+  watch: {
+    $route() {
+      this.id = this.$route.query.id;
+      console.log(this.id);
+      const _this = this;
+      this.axios
+        .get(
+          "http://localhost:8080/goods/findGoodsByLid?lid=" +
+            this.id +
+            "&pageSize=" +
+            15
+        )
+        .then(function (resp) {
+          console.log(resp);
+          _this.tableData = resp.data.list;
+          console.log(_this.tableData);
+          _this.total = resp.data.total;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+  },
+  created() {
+    console.log(this.$route.query);
+  },
+};
 </script>
 
 <style>
-.box_type{
+.box_type {
   width: 100%;
-  
 }
-.type{
+.type {
   /* border:1px solid black; */
   width: 150px;
   height: 245px;
@@ -178,16 +208,17 @@ export default {
   float: left;
   box-shadow: 0px 1px 3px #909090;
   /* background-color: rgb(212, 245, 143); */
+  overflow: hidden;
 }
-.cname{
-  text-align:left;
+.cname {
+  text-align: left;
   font-size: 17px;
 }
-.introduction{
-  text-align:left;
+.introduction {
+  text-align: left;
 }
-.price{
-  text-align:left;
+.price {
+  text-align: left;
   font-size: 17px;
 }
 </style>

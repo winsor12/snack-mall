@@ -9,7 +9,13 @@
     >
       <el-menu-item index="/consumer">首页</el-menu-item>
       <el-menu-item-group title="商品分类">
-        <el-menu-item v-for="(item,index) in typeData" :key="index" :index="'/type/'+ index">{{item.category}}</el-menu-item>
+        <el-menu-item
+          v-for="(item, index) in typeData"
+          :key="index"
+          :index="'/type/' + index"
+          :route="{path: '/type', query: { id: index} }"
+          >{{ item.category }}</el-menu-item
+        >
       </el-menu-item-group>
     </el-menu>
   </div>
@@ -18,8 +24,8 @@
 export default {
   data() {
     return {
-      typeData: []
-    }
+      typeData: [],
+    };
   },
   created() {
     const _this = this;

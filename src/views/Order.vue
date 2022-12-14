@@ -33,13 +33,26 @@
 export default {
   methods: {
     handleClick(row) {
-      //   console.log(row)
+      this.axios
+        .get("http://localhost:8080/orders/orders/deleteById?id=" + row.did)
+        .then(function (resp) {
+          console.log(resp.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
       alert("删除成功");
+      this.$router.go(0);
     },
     page(currentPage) {
       const _this = this;
       this.axios
-        .get("http://localhost:8080/orders/findAllByStatus?pageNum=" + currentPage + "&pageSize=5")
+        .get(
+          "http://localhost:8080/orders/findAllByStatus?pageNum=" +
+            currentPage +
+            "&pageSize=5"
+        )
         .then(function (resp) {
           _this.tableData = resp.data.list;
           _this.pageInfo.total = resp.data.total;

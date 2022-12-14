@@ -118,7 +118,7 @@ export default {
     },
     details(index) {
       // alert(this.tableData[index].cid)
-      this.$router.push("/details/" + this.tableData[index].cid);
+      this.$router.push({path:'/details',query:{id:this.tableData[index].cid}});
     },
   },
   created() {

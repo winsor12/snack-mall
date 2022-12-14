@@ -54,7 +54,7 @@
           <button class="button1" @click="layout">退出登录</button>
         </div>
       </el-menu>
-      <router-view></router-view>
+      <router-view v-if="isRouterAlive"></router-view>
     </div>
 
     <!-- <div>
@@ -114,8 +114,14 @@ i {
 
 <script>
 export default {
+  provide () {
+    return {
+      reload: this.reload
+    }
+  },
   data() {
     return {
+      isRouterAlive: true,
       role: JSON.parse(sessionStorage.getItem("user")).role,
     };
   },
@@ -137,6 +143,12 @@ export default {
         this.$router.push("/");
       }, 2000);
     },
+    reload() {
+      this.isRouterAlive = false,
+      this.$$nextTick(function() {
+        this.isRouterAlive = true
+      })
+    }
   },
 };
 </script>

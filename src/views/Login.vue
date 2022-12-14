@@ -91,7 +91,7 @@ el-input {
 
 .loginBox__main >>> .el-form-item__label {
   color: white;
-  width: 4rem;
+  width: 6rem;
 }
 
 .loginBox__main >>> .el-form-item__content {

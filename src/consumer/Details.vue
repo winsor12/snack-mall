@@ -7,45 +7,72 @@
         </el-header>
         <el-container direction="horizontal">
           <div class="box_zong">
-            <div class="box_top" v-for="(item, index) in snack" :key="index">
-              <button class="box_back" @click="back">回到首页</button>
+            <div class="box_top">
+              <el-button class="box_back" @click="back">回到首页</el-button>
               <div class="box_sname">
-                <div>供应商:{{ item.sname }}</div>
-                <div>供应商电话:{{ item.sphone }}</div>
-                <div>供应商地址:{{ item.saddress }}</div>
+                <div v-if="snack && snack.merchant">
+                  <el-popover
+                    placement="top-start"
+                    title="店铺信息"
+                    :width="200"
+                    trigger="hover"
+                  >
+                    <template #reference>
+                      <el-button class="m-2"
+                        >店铺名： {{ snack.merchant.sname }}</el-button
+                      >
+                    </template>
+                    <div>店铺名:{{ snack.merchant.sname }}</div>
+                    <div>供应商电话:{{ snack.merchant.sphone }}</div>
+                    <div>供应商地址:{{ snack.merchant.saddress }}</div>
+                  </el-popover>
+                </div>
               </div>
             </div>
-            <div class="box_main" v-for="(item, index) in snack" :key="index">
+            <div class="box_main">
               <div class="box_image">
-                <img :src="require('@/assets/af7988c6-8dd0-44bf-aabe-9ffca6c214ae_20221213102915.jpg')" style="width: 400px; height: 400px" />
+                <div
+                  v-if="
+                    snack.imageList &&
+                    snack.imageList[0] &&
+                    snack.imageList[0].image
+                  "
+                >
+                  <img
+                    :src="require('@/assets/' + snack.imageList[0].image)"
+                    style="width: 400px; height: 400px"
+                  />
+                </div>
               </div>
               <div class="box_main2">
-                <div class="box_inventory">商品库存量:{{ item.inventory }}</div>
+                <div class="box_inventory">
+                  商品库存量:{{ snack.inventory }}
+                </div>
                 <div class="box_cname">
                   <p class="shuming">商品名称:</p>
-                  {{ item.cname }}
+                  {{ snack.cname }}
                 </div>
                 <div class="box_introduction">
                   <p class="shuming">商品介绍:</p>
-                  {{ item.introduction }}
+                  {{ snack.introduction }}
                 </div>
                 <div class="box_price">
                   <p class="shuming">单价:</p>
-                  ¥{{ item.price }}
+                  ¥{{ snack.price }}
                 </div>
                 <p class="shuming2">数量:</p>
                 <div class="box_num">
                   <div>
                     <button @click="reduce1(index)" class="reduce1">-</button>
                   </div>
-                  <div class="num">{{ item.num }}</div>
+                  <div class="num">{{ num }}</div>
                   <div>
                     <button @click="addition1(index)" class="addition1">
                       +
                     </button>
                   </div>
                 </div>
-                <div class="box_sum">小计：¥{{ item.num * item.price }}</div>
+                <div class="box_sum">小计：¥{{ num * snack.price }}</div>
                 <button class="box_buy" @click="buy(index)">购买</button>
               </div>
             </div>
@@ -77,10 +104,18 @@
                   v-for="(item, index) in comment"
                   :key="index"
                 >
-                  <div class="comment6_uname">{{ item.uname }}</div>
+                  <div class="comment6_uname">{{ item.consumer.uname }}</div>
                   <div class="comment6_content">{{ item.content }}</div>
-                  <div class="comment6_ptime">{{ item.ptime }}</div>
-                  <div class="comment6_jubao" @click="jubao">举报</div>
+                  <div class="comment6_bottom">
+                    <div class="comment6_ptime">{{ item.ptime }}</div>
+                    <el-button
+                      color="#2376b7"
+                      type="primary"
+                      round
+                      @click="jubao"
+                      >举报</el-button
+                    >
+                  </div>
                 </div>
               </div>
             </div>
@@ -89,7 +124,6 @@
       </el-container>
     </div>
   </div>
-  <div style="height:100px"></div>
 </template>
 
 <script>
@@ -105,73 +139,61 @@ export default defineComponent({
     return {
       total: null,
       value: null,
-      snack: [
-        {
-          id: "2",
-          image: require("../assets/redmimi.png"),
-          introduction: "好吃到智障",
-          cname: "王小美",
-          sid: "1",
-          sname: "解忧炸货店",
-          sphone: "131-119-112",
-          saddress: "广东省中山市大望路21号零食工厂",
-          price: "10",
-          num: "1",
-          inventory: "5",
-        },
-      ],
-      comment: [
-        {
-          pid: "1",
-          uid: "2",
-          uname: "罗爵",
-          cid: "2",
-          content:
-            "这个零食不太好吃",
-          ptime: "2022-12-23",
-        },
-        {
-          pid: "1",
-          uid: "2",
-          uname: "罗爵",
-          cid: "2",
-          content: "这个零食很好吃，还会回购",
-          ptime: "2022-12-23",
-        },
-        {
-          pid: "1",
-          uid: "2",
-          uname: "罗爵",
-          cid: "2",
-          content: "这个零食很好吃，还会回购",
-          ptime: "2022-12-23",
-        },
-      ],
+      snack: {},
+      num: 1,
+      comment: null,
+      textarea: "",
+      commentForm: {
+        uid: "",
+        cid: "",
+        content: "",
+      },
     };
   },
   methods: {
     back() {
-      this.$router.push("/consumer")
+      this.$router.push("/consumer");
     },
     buy(index) {
       alert("购买成功！");
     },
     reduce1(index) {
-      if (this.snack[index].num <= 1) {
+      if (this.num <= 1) {
         alert("数量已减为1");
       } else {
-        this.snack[index].num--;
+        this.num--;
       }
     },
     addition1(index) {
-      if (this.snack[index].num < this.snack[index].inventory) {
-        this.snack[index].num++;
+      if (this.num < this.snack.inventory) {
+        this.num++;
       } else {
         alert("亲～没货啦～>.<");
       }
     },
     addcomment() {
-      alert("发表成功");
+      console.log(JSON.parse(sessionStorage.getItem("user")).id);
+      this.commentForm.uid = JSON.parse(sessionStorage.getItem("user")).id;
+      this.commentForm.cid = this.$route.query.id;
+      this.commentForm.content = this.textarea;
+      const _this = this;
+      this.axios({
+        method: "post",
+        url: "http://localhost:8080/comment/insert",
+        data: _this.commentForm,
+      })
+        .then((res) => {
+          if (res) {
+            alert("评论发布成功");
+            this.$router.go(0);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      console.log(this.commentForm);
+      console.log(this.textarea);
+      
     },
     jubao() {
       alert("举报成功");
@@ -181,6 +203,22 @@ export default defineComponent({
     return {
       textarea: ref(""),
     };
+  },
+  created() {
+    let id = this.$route.query.id;
+    const _this = this;
+    this.axios
+      .get("http://localhost:8080/goods/findGoodsById?id=" + id)
+      .then(function (resp) {
+        console.log(resp);
+        _this.snack = resp.data;
+        console.log(_this.snack);
+        _this.total = resp.data.total;
+        _this.comment = resp.data.commentList;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   },
 });
 </script>
@@ -280,7 +318,7 @@ export default defineComponent({
 }
 .box_sum {
   /* border: 1px solid black; */
-  width: 90px;
+  width: 110px;
   height: 50px;
   margin-left: 550px;
   line-height: 50px;
@@ -335,6 +373,7 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  font-size: 22px;
 }
 .comment {
   height: 100%;
@@ -388,37 +427,49 @@ export default defineComponent({
 .comment6 {
   height: 100%;
   margin-top: 20px;
-  box-shadow: 0px 2px 2px;
+  box-shadow: 0px 2px 20px #0000000f;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
 }
+
+.comment6:last-child {
+  margin-bottom: 100px;
+}
+
 .comment6_uname {
-  width: 120px;
-  font-size: 19px;
+  /* width: 120px; */
+  /* font-size: 19px; */
+  font-size: 18px;
+  color: #eebe77;
+  text-align: left;
+  padding: 0 65px;
+  width: 100%;
 }
 .comment6_content {
-  float: left;
-  margin-left: 130px;
-  height: 140px;
-  width: 700px;
+  flex-shrink: 1;
   font-size: 18px;
   text-align: left;
+  width: 60%;
 }
 .comment6_ptime {
-  float: left;
-  margin-left: 140px;
-  font-size: 13px;
-  margin-top: -20px;
+  margin: 0 20px;
 }
 .comment6_jubao {
-  width: 40px;
-  height: 25px;
-  float: left;
-  margin-top: 145px;
-  margin-left: 190px;
   border: 1px solid green;
   border-radius: 10px;
   color: blue;
 }
 .comment6_jubao:hover {
   color: red;
+}
+.comment6_bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  width: 100%;
+  padding: 0 20px;
 }
 </style>

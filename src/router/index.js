@@ -17,6 +17,7 @@ import ShoppingMall from "../consumer/ShoppingMall"
 import Type from "../consumer/Type"
 import Details from "../consumer/Details"
 import TheTest from "../consumer/TheTest"
+import MyOrders from "../consumer/MyOrders"
 
 
 const routes = [
@@ -77,7 +78,7 @@ const routes = [
         path: "/Order",
         name: "查看总订单",
         component: Order,
-        meta: {"role": ['merchant']}
+        meta: {"role": ['admin','merchant']}
       },
       {
         path: "/Ordersucceed",
@@ -130,12 +131,12 @@ const routes = [
     ]
     },
     {
-      path: "/type/:id",
+      path: "/type",
       component: Type,
       meta: {"role": ['consumer']},
     },
     {
-      path: "/details/:cid",
+      path: "/details",
       component: Details,
       meta: {"role": ['consumer']},
     },
@@ -143,6 +144,11 @@ const routes = [
       path: "/thetest",
       component: TheTest,
       meta: {"role": ['admin','merchant']}
+    },
+    {
+      path: "/myorders",
+      component: MyOrders,
+      meta: {"role": ['consumer']}
     }
 ]
 
