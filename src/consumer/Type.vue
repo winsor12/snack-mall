@@ -17,9 +17,20 @@
             </el-main>
           </el-container> -->
           <div class="box_type">
-            <div v-for="item in tableData" :key="item" class="type">
+            <div
+              v-for="(item, index) in tableData"
+              :key="item"
+              class="type"
+              @click="details(index)"
+            >
               <div class="image">
-                <div v-if="item.imageList && item.imageList[0] && item.imageList[0].image">
+                <div
+                  v-if="
+                    item.imageList &&
+                    item.imageList[0] &&
+                    item.imageList[0].image
+                  "
+                >
                   <el-image
                     :src="require('@/assets/' + item.imageList[0].image)"
                   ></el-image>
@@ -28,7 +39,7 @@
               <div class="cname">{{ item.cname }}</div>
               <div class="introduction">{{ item.introduction }}</div>
               <div class="price">¥{{ item.price }}</div>
-              <div class="shopcar" @click="addshopcar">+</div>
+              <div class="shopcar" @click="addshopcar(item)">+</div>
             </div>
           </div>
         </el-container>
@@ -158,11 +169,41 @@ export default {
           price: "12",
         },
       ],
+      shopcarForm: {
+        uid: null,
+        number: null,
+        cid: null,
+      },
     };
   },
   methods: {
-    addshopcar() {
-      alert("加入购物车成功");
+    details(index) {
+      // alert(this.tableData[index])
+      this.$router.push({
+        path: "/details",
+        query: { id: this.tableData[index].cid },
+      });
+    },
+    addshopcar(item) {
+      event.stopPropagation();
+      this.shopcarForm.uid = JSON.parse(sessionStorage.getItem("user")).id;
+      this.shopcarForm.number = 1;
+      this.shopcarForm.cid = item.cid;
+      console.log(this.shopcarForm);
+      const _this = this;
+      this.axios({
+        method: "post",
+        url: "http://localhost:8080/shopCar/addGoodForCar",
+        data: _this.shopcarForm,
+      })
+        .then((res) => {
+          if (res) {
+            alert("加入购物车成功");
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
   },
   watch: {
@@ -189,7 +230,25 @@ export default {
     },
   },
   created() {
-    console.log(this.$route.query);
+    this.id = this.$route.query.id;
+    console.log(this.id);
+    const _this = this;
+    this.axios
+      .get(
+        "http://localhost:8080/goods/findGoodsByLid?lid=" +
+          this.id +
+          "&pageSize=" +
+          15
+      )
+      .then(function (resp) {
+        console.log(resp);
+        _this.tableData = resp.data.list;
+        console.log(_this.tableData);
+        _this.total = resp.data.total;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   },
 };
 </script>
@@ -216,6 +275,10 @@ export default {
 }
 .introduction {
   text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 108px;
 }
 .price {
   text-align: left;

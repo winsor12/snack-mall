@@ -1,9 +1,28 @@
 <template>
   <div style="width: 100%; margin: 0 auto">
-    <el-table :data="tableData" stripe=true style="width: 100%">
+    <el-table :data="tableData" stripe="true" style="width: 100%">
       <el-table-column fixed prop="did" label="订单编号" />
       <el-table-column prop="goods.cname" label="商品名称" />
-      <el-table-column prop="goods.image" label="商品图" />
+      <el-table-column prop="goods.image" label="商品图">
+        <template #default="scope">
+          <div
+            v-if="
+              scope.row.goods &&
+              scope.row.goods.imageList[0] &&
+              scope.row.goods.imageList[0].image
+            "
+          >
+            <el-image
+              :src="require('@/assets/' + scope.row.goods.imageList[0].image)"
+              style="width: 50px"
+              :preview-src-list="[
+                require('@/assets/' + scope.row.goods.imageList[0].image),
+              ]"
+              preview-teleported="true"
+            ></el-image>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="goods.price" label="价格" />
       <el-table-column prop="number" label="订购数量" />
       <el-table-column prop="consumer.uname" label="客户姓名" />

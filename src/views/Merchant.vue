@@ -12,10 +12,10 @@
         @open="handleOpen"
         @close="handleClose"
       >
-        <el-aside width="201px">
+        <el-aside width="201px" style="height: 100vh">
           <el-menu router :default-openeds="['0', '1', '2', '3', '4']">
             <div
-              v-for="(item, index) in $router.options.routes.slice(0, 4)"
+              v-for="(item, index) in $router.options.routes.slice(0, 5)"
               :key="index"
             >
               <el-sub-menu

@@ -20,7 +20,7 @@
               <div class="price">¥{{ item.price }}</div>
             </div>
           </div>
-          <div class="shopcar" @click="addshopcar">+</div>
+          <div class="shopcar" @click="addshopcar(item)">+</div>
         </div>
       </div>
     </div>
@@ -44,6 +44,11 @@ export default {
   data() {
     return {
       total: null,
+      shopcarForm: {
+        uid: null,
+        cid: null,
+        number: null,
+      },
       tableData: [
         {
           cid: "1",
@@ -113,12 +118,32 @@ export default {
     };
   },
   methods: {
-    addshopcar() {
-      alert("加入购物车成功");
+    addshopcar(item) {
+      this.shopcarForm.uid = JSON.parse(sessionStorage.getItem("user")).id;
+      this.shopcarForm.number = 1;
+      this.shopcarForm.cid = item.cid;
+      console.log(this.shopcarForm);
+      const _this = this;
+      this.axios({
+        method: "post",
+        url: "http://localhost:8080/shopCar/addGoodForCar",
+        data: _this.shopcarForm,
+      })
+        .then((res) => {
+          if (res) {
+            alert("加入购物车成功");
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
     details(index) {
       // alert(this.tableData[index].cid)
-      this.$router.push({path:'/details',query:{id:this.tableData[index].cid}});
+      this.$router.push({
+        path: "/details",
+        query: { id: this.tableData[index].cid },
+      });
     },
   },
   created() {
@@ -234,5 +259,6 @@ export default {
   margin-top: -12px;
   color: white;
   font-size: 30px;
+  cursor: pointer;
 }
 </style>

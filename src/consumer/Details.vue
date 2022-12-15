@@ -73,7 +73,7 @@
                   </div>
                 </div>
                 <div class="box_sum">小计：¥{{ num * snack.price }}</div>
-                <button class="box_buy" @click="buy(index)">购买</button>
+                <button class="box_buy" @click="buy">购买</button>
               </div>
             </div>
             <div class="comment">
@@ -148,14 +148,37 @@ export default defineComponent({
         cid: "",
         content: "",
       },
+      shopcarForm: {
+        uid: null,
+        cid: null,
+        number: null,
+      },
     };
   },
   methods: {
     back() {
       this.$router.push("/consumer");
     },
-    buy(index) {
-      alert("购买成功！");
+    buy() {
+      this.shopcarForm.uid = JSON.parse(sessionStorage.getItem("user")).id;
+      this.shopcarForm.cid = this.$route.query.id;
+      this.shopcarForm.number = this.num;
+      console.log(this.shopcarForm);
+      const _this = this;
+      this.axios({
+        method: "post",
+        url: "http://localhost:8080/shopCar/addGoodForCar",
+        data: _this.shopcarForm,
+      })
+        .then((res) => {
+          if (res) {
+            alert("加入购物车成功");
+          }
+          c;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
     reduce1(index) {
       if (this.num <= 1) {
@@ -193,7 +216,6 @@ export default defineComponent({
         });
       console.log(this.commentForm);
       console.log(this.textarea);
-      
     },
     jubao() {
       alert("举报成功");

@@ -13,7 +13,7 @@
           v-for="(item, index) in typeData"
           :key="index"
           :index="'/type/' + index"
-          :route="{path: '/type', query: { id: index} }"
+          :route="{path: '/type', query: { id: index+1} }"
           >{{ item.category }}</el-menu-item
         >
       </el-menu-item-group>

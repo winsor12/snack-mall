@@ -177,6 +177,7 @@ export default {
     return {
       message: "",
       UserLogin: {
+        id: 123,
         username: "",
         password: "",
         role: "merchant",
@@ -222,17 +223,19 @@ export default {
           that.openFullScreen2();
           setTimeout(() => {
             console.log(res.data);
+            that.UserLogin.username = res.data.username;
+            that.UserLogin.role = res.data.role;
+            that.UserLogin.id = res.data.id;
             if (res.data.role == "admin" || res.data.role == "merchant") {
-              that.UserLogin = res.data;
               let user = JSON.stringify(that.UserLogin);
+              console.log(that.UserLogin);
               sessionStorage.setItem("user", [user]);
-              console.log(JSON.parse(sessionStorage.getItem("user")).role);
+              console.log(JSON.parse(sessionStorage.getItem("user")));
               that.$router.push("/Goods");
             } else if (res.data.role == "consumer") {
-              that.UserLogin = res.data;
               let user = JSON.stringify(that.UserLogin);
               sessionStorage.setItem("user", [user]);
-              console.log(JSON.parse(sessionStorage.getItem("user")).role);
+              console.log(JSON.parse(sessionStorage.getItem("user")));
               that.$router.push("/consumer");
             } else {
               that.message = "用户名或密码错误";

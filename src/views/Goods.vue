@@ -30,12 +30,26 @@
             <el-table-column label="用户电话" prop="consumer.uphone" />
             <el-table-column label="评论内容" prop="content" min-width="200" />
             <el-table-column label="评论时间" prop="ptime" />
+            <el-table-column label="操作">
+              <template #default="scope">
+                <el-button
+                  @click="deleteComment(scope.row.pid)"
+                  type="danger"
+                  size="small"
+                  >删除评论</el-button
+                >
+              </template>
+            </el-table-column>
           </el-table>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="200">
         <template #default="scope">
-          <el-button :disabled="buttonAbled" @click="handleClick(scope.row)" type="primary" size="small"
+          <el-button
+            :disabled="buttonAbled"
+            @click="handleClick(scope.row)"
+            type="primary"
+            size="small"
             >修改商品</el-button
           >
           <el-button
@@ -145,12 +159,12 @@ export default {
   computed: {
     buttonAbled() {
       let role = JSON.parse(sessionStorage.getItem("user")).role;
-      if (role=="admin") {
+      if (role == "admin") {
         return true;
-      }else {
+      } else {
         return false;
       }
-    }
+    },
   },
   methods: {
     page(currentPage) {
@@ -164,6 +178,21 @@ export default {
               "&pageSize=6" +
               "&sid=" +
               JSON.parse(sessionStorage.getItem("user")).id
+          )
+          .then(function (resp) {
+            _this.tableData = resp.data.list;
+            _this.total = resp.data.total;
+            console.log(resp.data);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else if (JSON.parse(sessionStorage.getItem("user")).role == "admin") {
+        this.axios
+          .get(
+            "http://localhost:8080/goods/findGoodsBySid?pageNum=" +
+              currentPage +
+              "&pageSize=6"
           )
           .then(function (resp) {
             _this.tableData = resp.data.list;
@@ -209,48 +238,80 @@ export default {
         });
       this.dialogFormVisible = false;
     },
+    deleteComment(pid) {
+      const _this = this;
+      this.axios
+        .get("http://localhost:8080/comment/delete?id=" + pid)
+        .then(function (resp) {
+          if (resp) {
+            ElMessage("删除成功");
+            _this.$router.go(0);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    },
+    deleteForId(id) {
+      const _this = this;
+      this.axios
+        .get("http://localhost:8080/goods/deleteById?id=" + id)
+        .then(function (resp) {
+          if (resp) {
+            ElMessage("删除成功");
+            _this.$router.go(0);
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      this.init();
+    },
+    init() {
+      const _this = this;
+
+      this.axios
+        .get("http://localhost:8080/types/findAll")
+        .then(function (resp) {
+          console.log(resp.data);
+          _this.options = resp.data;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      if (JSON.parse(sessionStorage.getItem("user")).role == "merchant") {
+        this.axios
+          .get(
+            "http://localhost:8080/goods/findGoodsBySid?sid=" +
+              JSON.parse(sessionStorage.getItem("user")).id
+          )
+          .then(function (resp) {
+            console.log(resp.data);
+            _this.tableData = resp.data.list;
+            console.log(_this.tableData);
+            _this.total = resp.data.total;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else if (JSON.parse(sessionStorage.getItem("user")).role == "admin") {
+        this.axios
+          .get("http://localhost:8080/goods/findGoodsBySid")
+          .then(function (resp) {
+            console.log(resp.data);
+            _this.tableData = resp.data.list;
+            console.log(_this.tableData);
+            _this.total = resp.data.total;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    },
   },
   created() {
-    const _this = this;
-
-    this.axios
-      .get("http://localhost:8080/types/findAll")
-      .then(function (resp) {
-        console.log(resp.data);
-        _this.options = resp.data;
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-
-    if (JSON.parse(sessionStorage.getItem("user")).role == "merchant") {
-      this.axios
-        .get(
-          "http://localhost:8080/goods/findGoodsBySid?sid=" +
-            JSON.parse(sessionStorage.getItem("user")).id
-        )
-        .then(function (resp) {
-          console.log(resp.data);
-          _this.tableData = resp.data.list;
-          console.log(_this.tableData);
-          _this.total = resp.data.total;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    } else if (JSON.parse(sessionStorage.getItem("user")).role == "admin") {
-      this.axios
-        .get("http://localhost:8080/goods/findGoodsBySid")
-        .then(function (resp) {
-          console.log(resp.data);
-          _this.tableData = resp.data.list;
-          console.log(_this.tableData);
-          _this.total = resp.data.total;
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    }
+    this.init();
   },
 };
 </script>

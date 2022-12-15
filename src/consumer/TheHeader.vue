@@ -30,17 +30,21 @@
             <th class="title">操作</th>
           </tr>
           <tr v-for="(item, index) in cars" :key="index">
-            <th>{{ item.id }}</th>
-            <th>{{ item.image }}</th>
-            <th>{{ item.cname }}</th>
-            <th>¥{{ item.price }}</th>
-            <th class="operation">
+            <td>{{ item.id }}</td>
+            <td>
+              <el-image
+                :src="require('@/assets/' + item.goods.imageList[0].image)"
+              ></el-image>
+            </td>
+            <td>{{ item.goods.cname }}</td>
+            <td>¥{{ item.goods.price }}</td>
+            <td class="operation">
               <el-button @click="reduce(index)" class="reduce">-</el-button>
-              <div class="num">{{ item.num }}</div>
+              <div class="num">{{ item.number }}</div>
               <el-button @click="addition(index)" class="addition">+</el-button>
-            </th>
-            <th>¥{{ item.num * item.price }}</th>
-            <el-button @click="deletes(index)">删除</el-button>
+            </td>
+            <th>¥{{ item.number * parseInt(item.goods.price) }}</th>
+            <el-button type="danger" @click="deletes(item.id)">删除</el-button>
           </tr>
         </table>
         <div class="sum">总价: ¥{{ Total }}</div>
@@ -65,6 +69,9 @@
             <el-dropdown-item
               ><span @click="layout">退出登录</span></el-dropdown-item
             >
+            <el-dropdown-item
+              ><span @click="myself">个人信息</span></el-dropdown-item
+            >
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -82,7 +89,7 @@ export default {
           image: "123123",
           cname: "王小虎",
           price: "12",
-          num: "1",
+          number: "1",
           inventory: "5",
         },
         {
@@ -90,7 +97,7 @@ export default {
           image: "123123",
           cname: "王小美",
           price: "10",
-          num: "1",
+          number: "1",
           inventory: "5",
         },
         {
@@ -98,47 +105,121 @@ export default {
           image: "123123",
           cname: "王小费",
           price: "13",
-          num: "1",
+          number: "1",
           inventory: "5",
         },
       ],
       ttt: false,
       user: JSON.parse(sessionStorage.getItem("user")),
+      order: {
+        cid: null,
+        uid: null,
+        number: null,
+        sid: null,
+      },
     };
   },
   computed: {
     Total() {
       let total = 0;
       for (let i = 0; i < this.cars.length; i++) {
-        total += this.cars[i].num * this.cars[i].price;
+        total += this.cars[i].number * this.cars[i].goods.price;
       }
       return total;
     },
   },
   methods: {
     buy() {
+      const _this = this;
+      console.log(this.cars.length);
+      for (var i = 0; i < this.cars.length; i++) {
+        this.order.cid = this.cars[i].goods.cid;
+        this.order.uid = this.user.id;
+        this.order.number = this.cars[i].number;
+        this.order.sid = this.cars[i].goods.merchant.sid;
+        this.axios({
+          method: "post",
+          url: "http://localhost:8080/orders/createOrders",
+          data: this.order,
+        }).then((res) => {
+          if (res) {
+          }
+        });
+      }
       alert("购买成功！");
-      window.location.reload();
+      this.ttt = false;
+      this.$router.push("/myorders");
     },
     reduce(index) {
-      if (this.cars[index].num <= 1) {
+      const _this = this;
+      if (this.cars[index].number <= 1) {
         alert("数量已减为1");
       } else {
-        this.cars[index].num--;
+        this.axios
+          .get(
+            "http://localhost:8080/shopCar/decrease?id=" + this.cars[index].id
+          )
+          .then(function (resp) {
+            if (resp) {
+              _this.shopcar();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       }
     },
     addition(index) {
-      if (this.cars[index].num < this.cars[index].inventory) {
-        this.cars[index].num++;
+      console.log(this.cars[index]);
+      if (this.cars[index].number < this.cars[index].goods.inventory) {
+        const _this = this;
+        this.axios
+          .get(
+            "http://localhost:8080/shopCar/increase?id=" + this.cars[index].id
+          )
+          .then(function (resp) {
+            if (resp) {
+              _this.shopcar();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
       } else {
         alert("亲～没货啦～>.<");
       }
     },
-    deletes(index) {
-      this.cars.splice(index, 1);
+    deletes(id) {
+      const _this = this;
+      this.axios({
+        method: "get",
+        url: "http://localhost:8080/shopCar/delete?id=" + id,
+      })
+        .then((res) => {
+          if (res) {
+            this.shopcar();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      console.log(id);
     },
     shopcar() {
-      this.ttt = true;
+      const _this = this;
+      this.axios
+        .get(
+          "http://localhost:8080/shopCar/findAllByUid?uid=" +
+            JSON.parse(sessionStorage.getItem("user")).id
+        )
+        .then(function (resp) {
+          console.log(resp.data);
+          _this.cars = resp.data;
+          _this.ttt = true;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
       // this.$router.push('/shopcar')
     },
     layout() {
@@ -161,7 +242,11 @@ export default {
     myorders() {
       this.$router.push("/myorders");
     },
+    myself() {
+      this.$router.push("/myself");
+    },
   },
+  created() {},
 };
 </script>
 
@@ -266,5 +351,9 @@ export default {
   align-items: center;
   margin: 0 auto;
   justify-content: center;
+}
+
+td {
+  height: 60px;
 }
 </style>

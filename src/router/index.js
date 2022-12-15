@@ -18,6 +18,10 @@ import Type from "../consumer/Type"
 import Details from "../consumer/Details"
 import TheTest from "../consumer/TheTest"
 import MyOrders from "../consumer/MyOrders"
+import Myself from "../consumer/Myself"
+import ReturnOrder from "../views/ReturnOrder"
+import MerchantInfo from "../views/MerchantInfo"
+import ConsumerInfo from "../views/ConsumerInfo"
 
 
 const routes = [
@@ -91,6 +95,32 @@ const routes = [
         name: "查看未完成订单",
         component: Orderfailing,
         meta: {"role": ['admin','merchant']}
+      },
+      {
+        path: "/ReturnOrder",
+        name: "查看退货订单",
+        component: ReturnOrder,
+        meta: {"role": ['admin','merchant']}
+      }
+    ]
+  },
+  {
+    path: "/navigation",
+    name: "用户信息",
+    component: Merchant,
+    meta: {"role": ['admin']},
+    children: [
+      {
+        path: "/MerchantInfo",
+        name: "查看商家信息",
+        component: MerchantInfo,
+        meta: {"role": ['admin']}
+      },
+      {
+        path: "/ConsumerInfo",
+        name: "查看消费者信息",
+        component: ConsumerInfo,
+        meta: {"role": ['admin']}
       }
     ]
   },
@@ -149,6 +179,11 @@ const routes = [
       path: "/myorders",
       component: MyOrders,
       meta: {"role": ['consumer']}
+    },
+    {
+      path: "/myself",
+      component: Myself,
+      meta: {"role": ['consumer']},
     }
 ]
 

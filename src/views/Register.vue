@@ -6,14 +6,16 @@
       </div>
       <div class="form">
         <div class="form__inputbox">
-          <label class="form_label" for="name">用户名</label>
-          <span class="span">{{ message }}</span>
+          <label class="form_label" for="name"
+            >用户名<span class="span">{{ message }}</span></label
+          >
+
           <input
             type="text"
             class="form__input form__input-1"
             placeholder="请输入用户名"
             id="name"
-            v-model="UserLogin.name"
+            v-model="UserLogin.username"
           />
         </div>
 
@@ -26,6 +28,13 @@
             id="password"
             v-model="UserLogin.password"
           />
+        </div>
+
+        <div class="mb-2 flex items-center text-sm">
+          <el-radio-group v-model="radio" class="ml-4">
+            <el-radio label="1" size="large">消费者</el-radio>
+            <el-radio label="2" size="large">商家</el-radio>
+          </el-radio-group>
         </div>
 
         <div class="form__button" @click="register">注册</div>
@@ -41,33 +50,61 @@ export default {
     return {
       message: "sss",
       UserLogin: {
-        name: "",
+        username: "",
         password: "",
       },
+      radio: "1",
     };
   },
   methods: {
     register() {
-      const that = this;
-      console.log(this.UserLogin.name), console.log(this.UserLogin.password);
-      axios({
-        method: "post",
-        url: "http://localhost:8181/register",
-        params: this.UserLogin,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }).then((res) => {
-        console.log(res);
-        if (res.data == true) {
-          setTimeout(() => {
-            that.$router.push("/");
-          }, 1000);
-        } else {
-          that.message = "用户名已存在";
-          document.getElementsByClassName("span")[0].style.opacity = 1;
-        }
-      });
+      const _this = this;
+      console.log(this.UserLogin.username),
+        console.log(this.UserLogin.password);
+      console.log(this.radio);
+      if (this.radio == 1) {
+        this.axios
+          .get(
+            "http://localhost:8080/user/consumerRegister?username=" +
+              this.UserLogin.username +
+              "&password=" +
+              this.UserLogin.password
+          )
+          .then(function (resp) {
+            if (resp.data == true) {
+              setTimeout(() => {
+                _this.$router.push("/");
+              }, 1000);
+            } else {
+              _this.message = "用户名已存在";
+              document.getElementsByClassName("span")[0].style.opacity = 1;
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else if (this.radio == 2) {
+        this.axios
+          .get(
+            "http://localhost:8080/user/merchantRegister?username=" +
+              this.UserLogin.username +
+              "&password=" +
+              this.UserLogin.password
+          )
+          .then(function (resp) {
+            if (resp.data == true) {
+              setTimeout(() => {
+                _this.$router.push("/");
+              }, 1000);
+            } else {
+              _this.message = "用户名已存在";
+              document.getElementsByClassName("span")[0].style.opacity = 1;
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
     },
   },
 };
@@ -95,21 +132,19 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  width: 30rem;
-  height: 22rem;
-  padding: 2rem;
+  width: 28rem;
+  height: 26rem;
+  height: 30rem;
   border-radius: 5px;
   background: white;
-
-  box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.493);
+  box-shadow: 0 0.8rem 2rem rgb(0 0 0 / 49%);
 }
 
 .form__inputbox {
   font-size: 0.8rem;
   width: 90%;
   height: 3rem;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
 }
 
 .registerBox .heading {
@@ -122,23 +157,28 @@ export default {
 
 .registerBox .form {
   margin: 0 auto;
-  padding-left: 2rem;
+  padding-left: 3rem;
 }
 
 .form__inputbox .form_label {
   color: #2376b7;
   display: inline-block;
   margin-bottom: 1rem;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .form__inputbox .form__input {
   display: block;
-  padding: 0.5rem 0.8rem;
+  padding: 8px 0.8rem;
   border: none;
   background: #e7e7e7;
   width: 100%;
   text-align: inherit;
   outline: none;
+  font-size: 12px;
   border-radius: 3px;
 }
 
